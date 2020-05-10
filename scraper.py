@@ -5,6 +5,8 @@ import re
 import urllib.request
 from flask import Flask,render_template,request
 import os
+from flask import send_file
+
 app = Flask(__name__)
 
 @app.route('/',methods=["GET","POST"])
@@ -23,7 +25,11 @@ def scrape():
 
     return render_template('index.html')
 
-
+@app.route('/download')
+def downloadFile ():
+    #For windows you need to use drive name [ex: F:/Example.pdf]
+    path = "jobstest.xlsx"
+    return send_file(path, as_attachment=True)
 
 def indeed(place,role):
 
@@ -107,7 +113,6 @@ def shine(place,role):
     return pd.DataFrame(jobs2)
     
 
-
 def add_to_excel(webs,all_jobs):
     
     writer = pd.ExcelWriter('jobstest.xlsx', engine='xlsxwriter')
@@ -122,7 +127,10 @@ def add_to_excel(webs,all_jobs):
         number+=1
 
 
+
     writer.save()
+    return send_file('jobstest.xlsx', attachment_filename='jobstest.xlsx')
+    
 
 
 # if __name__=="__main__":
