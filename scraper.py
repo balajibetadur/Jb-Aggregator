@@ -5,7 +5,6 @@ import re
 import urllib.request
 from flask import Flask,render_template,request
 import os
-import XlsxWriter
 app = Flask(__name__)
 
 @app.route('/',methods=["GET","POST"])
@@ -111,10 +110,7 @@ def shine(place,role):
 
 def add_to_excel(webs,all_jobs):
     
-    cwd = os.getcwd()
-    path=cwd+'jobstest.xlsx'
-    print(path)
-    writer = pd.ExcelWriter(path, engine='xlsxwriter')
+    writer = pd.ExcelWriter('jobstest.xlsx', engine='xlsxwriter')
     number=0
     for jobs in all_jobs:
         jobs.columns=['Job Title','	Date','	Recruiter name','	Tel','	Mailid','	Website ','	Location','	Company	','Skills','	Desc','	Salary','	Experince','	Link']
