@@ -15,12 +15,18 @@ def scrape():
         fe=request.form
         role=fe['role']
         place=fe['place']
+
         Shine,Shine2 = shine(place,role)
         Indeed,Indeed2 = indeed(place,role)
-        webs=['shine','indeed']
-        all_jobs=[Shine,Indeed]
+        Times,Times2 = times(place,role)
+
+        webs=['shine','indeed','Times Jobs']
+
+        all_jobs=[Shine,Indeed,Times]
+
         add_to_excel(webs,all_jobs)
-        all_jobs2=[Shine2,Indeed2]
+        
+        all_jobs2=[Shine2,Indeed2,Times2]
 
         return render_template('result.html',all_jobs=all_jobs2)
 
@@ -29,7 +35,9 @@ def scrape():
 @app.route('/download')
 def downloadFile ():
     #For windows you need to use drive name [ex: F:/Example.pdf]
-    path = "jobstest.xlsx"
+
+    
+    path = "jobs.xlsx"
     return send_file(path, as_attachment=True)
 
 def indeed(place,role):
@@ -64,7 +72,7 @@ def indeed(place,role):
       
       for o in range(0,len(b)):
           jobs.append([title[o].text.strip(),date,comp[o].text.strip(),tel,mail,web,loc[o]['data-rc-loc'],comp[o].text.strip(),skills,desc[o].text.strip(),sal,exp,'https://www.indeed.com'+ href[o]['href']])
-
+      print(len(jobs))
   return pd.DataFrame(jobs),jobs
 
 
@@ -110,13 +118,85 @@ def shine(place,role):
             link = i.find('a', attrs={'class': 'cls_searchresult_a searchresult_link'})
         
             jobs2.append([title.strip(),date[j].get_text().strip(),employer[j].get_text().strip(),tel,mailid,web.strip(),loc.strip(),web.strip(),skill,desc[j].get_text().strip(),salary,exp,'https://www.shine.com'+ link['href']])
-
+            print(len(jobs2))
     return pd.DataFrame(jobs2),jobs2
     
 
+def times(place,role):
+        
+    jobs3 = []
+    job=''
+    role=role.split(' ')
+    for i in role:
+        if i != role[-1]:
+            job+=i+'+'
+        else:
+            job+=i  
+
+
+
+    url = urllib.request.urlopen(f'https://www.timesjobs.com/candidate/job-search.html?searchType=personalizedSearch&from=submit&txtKeywords={job}&txtLocation=+{place}')
+    soup = BeautifulSoup(url,'html.parser') 
+
+    # a=soup.find_all('ul', attrs={'class': 'new-joblist'})
+    # print(a)
+
+
+    regex = re.compile('^new-joblist')
+    content_lis = soup.find_all('ul', attrs={'class': regex})
+    # print(content_lis)
+    no=0
+    for i in content_lis:
+        while no<25:
+
+            title = i.find_all('strong', attrs={'class': 'blkclor'})[no].text
+
+            date = '-'
+            
+            company_name=i.find_all('h3', attrs={'class': 'joblist-comp-name'})[no].text.strip()
+            
+            tel = '-'
+
+            mail = '-'
+
+            web = '-'
+
+            set1=i.find_all('ul', attrs={'class': 'top-jd-dtl clearfix'})[no].text
+            set12=set1.split()
+            e1 = set12[0].strip('card_travel')
+            e2 = set12[2]
+
+            Location = set12[-1]
+
+            company_name=i.find_all('h3', attrs={'class': 'joblist-comp-name'})[no].text.strip()
+            Desc = i.find_all('ul', attrs={'class': 'list-job-dtl clearfix'})[no].text
+            Desc = Desc.split('KeySkills:')
+
+            
+            Skills =Desc[1].strip()
+
+            Desc1 = Desc[0].strip()
+
+            sal ='-'    
+
+            exp= f'{e1} - {e2}'
+
+            
+            Link = i.find_all('a', href=re.compile('^https://www.timesjobs.com/job-detail/'))[no]
+            Link = str(Link).split('"')
+            fLink=Link[1]
+
+            jobs3.append([title,date,company_name,tel,mail,web,Location,company_name,Skills,Desc1,sal,exp,fLink])
+            no+=1
+            print(len(jobs3))
+    return pd.DataFrame(jobs3),jobs3
+        
+
+
+
 def add_to_excel(webs,all_jobs):
     
-    writer = pd.ExcelWriter('jobstest.xlsx', engine='xlsxwriter')
+    writer = pd.ExcelWriter('Jobs.xlsx', engine='xlsxwriter')
     number=0
     for jobs in all_jobs:
         jobs.columns=['Job Title','	Date','	Recruiter name','	Tel','	Mailid','	Website ','	Location','	Company	','Skills','	Desc','	Salary','	Experince','	Link']
@@ -130,7 +210,7 @@ def add_to_excel(webs,all_jobs):
 
 
     writer.save()
-    return send_file('jobstest.xlsx', attachment_filename='jobstest.xlsx')
+    # return send_file('jobstest.xlsx', attachment_filename='jobstest.xlsx')
     
 
 
