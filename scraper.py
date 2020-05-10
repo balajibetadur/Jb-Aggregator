@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import re
 import urllib.request
 from flask import Flask,render_template,request
+import os
+import XlsxWriter
 app = Flask(__name__)
 
 @app.route('/',methods=["GET","POST"])
@@ -108,7 +110,7 @@ def shine(place,role):
 
 
 def add_to_excel(webs,all_jobs):
-    import os
+    
     cwd = os.getcwd()
     path=cwd+'jobstest.xlsx'
     print(path)

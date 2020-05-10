@@ -10,3 +10,4 @@ numpy>=1.9.2
 scipy>=0.15.1
 scikit-learn>=0.18
 nltk>=3.3.0
+XlsxWriter>=1.2.8
