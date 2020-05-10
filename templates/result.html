@@ -33,22 +33,84 @@
         </div>
       </nav>
 
-<div class='container col-md-6'>
-    <h2 class="text-center mt-3">Job Aggregator | Find a JOB </h2><br><br><br><br><br>
+<div style='font-size:10px;padding:0px;  ' class='container my-3'>
+    <h2 style="font-size:35px;" class="text-center ">Job Aggregator | Find a JOB </h2><br><br><br><br><br>
     
        
+    <div class="container">
+        <a href='/'> <button  class="btn btn-outline-primary mb-2">Home</button></a>
+        <a style="float: right;" href='/download'> <button  class="btn btn-outline-primary mb-2">Download Results</button></a>
+                  
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Job title</th>
+              <th>Posted Dtae</th>
+              <th>Recruiter</th>
+              <th>Tel</th>
+              <th>Mail</th>
+              <th>Website</th>
+              <th>Location</th>
+              <th>Company</th>
+              <th>Skills</th>
+              <th>Description</th>
+              <th>Salary</th>
+              <th>Experience</th>
+              <th>link</th>
+              
+            </tr>
+          </thead>
+        </table>
           
           
-        {% for i in all_jobs %}
-     
-        {{i}}
-        {%endfor%}
+        <table style='font-size:10px; ' class="table table-striped">
+        <tbody>
+            {% for i in all_jobs %}
+          {% for j in i %}
+            <tr>
+                <td>{{j[0]}}</td>
+                <td>{{j[1]}}</td>
+                <td>{{j[2]}}</td>
+                <td>{{j[3]}}</td>
+                <td>{{j[4]}}</td>
+                <td>{{j[5]}}</td>
+                <td>{{j[6]}}</td>
+                <td>{{j[7]}}</td>
+                <td>{{j[8]}}</td>
+                <td>{{j[9]}}</td>
+                <td>{{j[10]}}</td>
+                <td>{{j[11]}}</td>
+                <td><a href="{{j[12]}}"><button class="btn btn-success">Link</button></a></td>
+             
+            </tr>
+            {%endfor%}
+            {%endfor%}
+          </tbody></table>
+       
         
+         
+        
+    
+</div>
+
+
+
+      
+        
+       
+
+            
+
+
+
+
+
+
        <br><br>
 
-       <a href='/'> <button  class="btn btn-outline-primary mb-2">Home</button></a>
        
-       <a href='/download'> <button  class="btn btn-outline-primary mb-2">Download Results</button></a>
+       
+       
      </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

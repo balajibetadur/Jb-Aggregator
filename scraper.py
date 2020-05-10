@@ -15,13 +15,14 @@ def scrape():
         fe=request.form
         role=fe['role']
         place=fe['place']
-        Shine = shine(place,role)
-        Indeed = indeed(place,role)
+        Shine,Shine2 = shine(place,role)
+        Indeed,Indeed2 = indeed(place,role)
         webs=['shine','indeed']
         all_jobs=[Shine,Indeed]
         add_to_excel(webs,all_jobs)
+        all_jobs2=[Shine2,Indeed2]
 
-        return render_template('result.html',all_jobs=all_jobs)
+        return render_template('result.html',all_jobs=all_jobs2)
 
     return render_template('index.html')
 
@@ -54,17 +55,17 @@ def indeed(place,role):
       comp = i.find_all('span', attrs={'class':'company'})
       desc = i.find_all('div', attrs={'class':'summary'})
       href=i.find_all('a', attrs={'class':'jobtitle turnstileLink'})
-      tel='not provided'
-      mail='not provided'
-      web='not provided'
-      skills='not provided'
-      exp='not provided'
-      sal='not provided'
+      tel='-'
+      mail='-'
+      web='-'
+      skills='-'
+      exp='-'
+      sal='-'
       
       for o in range(0,len(b)):
           jobs.append([title[o].text.strip(),date,comp[o].text.strip(),tel,mail,web,loc[o]['data-rc-loc'],comp[o].text.strip(),skills,desc[o].text.strip(),sal,exp,'https://www.indeed.com'+ href[o]['href']])
 
-  return pd.DataFrame(jobs)
+  return pd.DataFrame(jobs),jobs
 
 
 
@@ -95,8 +96,8 @@ def shine(place,role):
             title = i.find_all('li', attrs={'class': 'snp cls_jobtitle'})[0].text
             date = i.find_all('li', attrs={'class': 'time share_links jobDate'})          
             employer = i.find_all('li', attrs={'class': 'snp_cnm cls_cmpname cls_jobcompany'})         
-            tel='not provided in dashboard'
-            mailid='not provided in dashboard'
+            tel='-'
+            mailid='-'
             web=i.find_all('li', attrs={'class': 'snp_cnm cls_cmpname cls_jobcompany'})[0].text
             loc=i.find_all('em')[0].text
             web=i.find_all('li', attrs={'class': 'snp_cnm cls_cmpname cls_jobcompany'})[0].text
@@ -104,13 +105,13 @@ def shine(place,role):
             skills = i.find_all('div', attrs={'class': 'sk jsrp cls_jobskill'})[0]
             skill=skills.text
             desc = i.find_all('li', attrs={'class': 'srcresult'})
-            salary='not provided in dashboard'
+            salary='-'
             exp = i.find_all('span', attrs={'class': 'snp_yoe cls_jobexperience'})[0].text.strip()
             link = i.find('a', attrs={'class': 'cls_searchresult_a searchresult_link'})
         
             jobs2.append([title.strip(),date[j].get_text().strip(),employer[j].get_text().strip(),tel,mailid,web.strip(),loc.strip(),web.strip(),skill,desc[j].get_text().strip(),salary,exp,'https://www.shine.com'+ link['href']])
 
-    return pd.DataFrame(jobs2)
+    return pd.DataFrame(jobs2),jobs2
     
 
 def add_to_excel(webs,all_jobs):
