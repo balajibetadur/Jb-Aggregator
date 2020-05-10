@@ -38,9 +38,14 @@
     
        
     <div class="">
-        <a href='/'> <button  class="btn btn-outline-primary mb-2">Home</button></a>
-        <a style="float: right;" href='/downloadfile'> <button  class="btn btn-outline-primary mb-2">Download Results</button></a>
-                  
+        <div class="col-md-3"><a href="/"> <button style="float: left;" class="btn btn-outline-primary mb-2" >Home</button></a>
+        </div>
+        <div class="colmd-9">
+          <form action='/down' method="post">
+            <button style="float:right;"type='submit' class="btn btn-outline-primary mb-2">Download Results</button>
+         </form>
+        </div>
+        
         <table class="table table-striped">
           <thead>
             <tr>

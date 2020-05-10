@@ -6,6 +6,7 @@ import urllib.request
 from flask import Flask,render_template,request
 import os
 from flask import send_file
+import random
 
 app = Flask(__name__)
 
@@ -32,11 +33,14 @@ def scrape():
 
     return render_template('index.html')
 
-@app.route('/downloadfile')
-def downloadFile ():
-    
-    path = "jobs.xlsx"
-    return send_file(path, as_attachment=True)
+@app.route('/down',methods=["GET","POST"])
+def down ():
+    # add_to_excel(webs,all_jobs)
+    if request.method=="POST":
+
+        
+        path = "jobs.xlsx"
+        return send_file(path, as_attachment=True)
 
 def indeed(place,role):
 
@@ -193,8 +197,11 @@ def times(place,role):
 
 
 def add_to_excel(webs,all_jobs):
+    ra=random.randint(0,10000)
+    # filename=f'Jobs{ra}.xlsx'
+    filename='jobs.xlsx'
     
-    writer = pd.ExcelWriter('Jobs.xlsx', engine='xlsxwriter')
+    writer = pd.ExcelWriter(filename, engine='xlsxwriter')
     number=0
     for jobs in all_jobs:
         jobs.columns=['Job Title','	Date','	Recruiter name','	Tel','	Mailid','	Website ','	Location','	Company	','Skills','	Desc','	Salary','	Experince','	Link']
@@ -208,7 +215,9 @@ def add_to_excel(webs,all_jobs):
 
 
     writer.save()
-    # return send_file('jobstest.xlsx', attachment_filename='jobstest.xlsx')
+    
+    
+    # return send_file(filename, attachment_filename=filename)
     
 
 
