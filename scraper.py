@@ -25,17 +25,15 @@ def scrape():
         all_jobs=[Shine,Indeed,Times]
 
         add_to_excel(webs,all_jobs)
-        
+
         all_jobs2=[Shine2,Indeed2,Times2]
 
         return render_template('result.html',all_jobs=all_jobs2)
 
     return render_template('index.html')
 
-@app.route('/download')
+@app.route('/downloadfile')
 def downloadFile ():
-    #For windows you need to use drive name [ex: F:/Example.pdf]
-
     
     path = "jobs.xlsx"
     return send_file(path, as_attachment=True)
@@ -118,7 +116,7 @@ def shine(place,role):
             link = i.find('a', attrs={'class': 'cls_searchresult_a searchresult_link'})
         
             jobs2.append([title.strip(),date[j].get_text().strip(),employer[j].get_text().strip(),tel,mailid,web.strip(),loc.strip(),web.strip(),skill,desc[j].get_text().strip(),salary,exp,'https://www.shine.com'+ link['href']])
-            print(len(jobs2))
+    print(len(jobs2))
     return pd.DataFrame(jobs2),jobs2
     
 
@@ -188,7 +186,7 @@ def times(place,role):
 
             jobs3.append([title,date,company_name,tel,mail,web,Location,company_name,Skills,Desc1,sal,exp,fLink])
             no+=1
-            print(len(jobs3))
+    print(len(jobs3))
     return pd.DataFrame(jobs3),jobs3
         
 
