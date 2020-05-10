@@ -12,11 +12,12 @@ def scrape():
         fe=request.form
         role=fe['role']
         place=fe['place']
-        Shine = shine(place,role)
-        Indeed = indeed(place,role)
-        webs=['shine','indeed']
-        all_jobs=[Shine,Indeed]
-        add_to_excel(webs,all_jobs)
+        # Shine = shine(place,role)
+        # Indeed = indeed(place,role)
+        # webs=['shine','indeed']
+        # all_jobs=[Shine,Indeed]
+        # add_to_excel(webs,all_jobs)
+        all_jobs=role+place
 
         return render_template('result.html',all_jobs=all_jobs)
 
